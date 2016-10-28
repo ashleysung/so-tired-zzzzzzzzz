@@ -1,0 +1,41 @@
+import pygame.sprite
+# Setup is a superclass
+class Setup(pygame.sprite.Sprite):
+	# takes in a position(x, y), the list of costumes, and a boolean to object can be picked up
+	def __init__(self, posn, costume, allow_pickup = True):
+		super().__init__()
+		# image of the sprites
+		self.image = costume
+		# makes a rectangle around image to make the moving easier
+		self.rect = self.image.get_rect()
+		# sets the center of the rect-image to posn
+		self.rect.center = posn
+		# attached to any object, start off with not being attached to anything
+		self.attached_object = None
+		# what are you carrying around, also start off with not carrying noting around
+		self.carrying = None
+		# self.allow_pickup is the allow_pickup
+		self.allow_pickup = allow_pickup
+	# the very helpful update function
+	def update(self):
+		if self.attached_object:
+			# changes the center, which means change in posn
+			self.rect.center = self.attached_object.center
+# subclass of Setup
+class Player(Setup):
+  # takes in posn and the costume/image
+	def __init__(self, posn, costume):
+		# retrieves the information from the superclass, Setup
+		super().__init__(posn, costume, allow_pickup = False)
+	def yes_pickup(self, object):
+		# uses pygame.rect.colliderect() to see if 2 rects are close enough to be picked up
+		return object.allow_pickup and pygame.rect.colliderect(self.rect, object.rect)
+	# pickup() is used only is yes_pickup is True, meaning the object can be picked up
+	def pickup(self, object):
+		# equips the player with the object
+		self.carrying = object
+		object.attached_object = sel
+	def put_down(self, object):
+		#player is no longer equipped with the object
+		self.carrying = None
+		object.attached_object = None
